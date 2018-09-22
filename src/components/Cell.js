@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Editor, EditorState } from 'draft-js';
+import { Editor, EditorState, ContentState } from 'draft-js';
 
 class TextEditor extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            editorState: EditorState.createEmpty(),
+            editorState: EditorState.createWithContent(ContentState.createFromText(this.props.children || '')),
             isFocused: false
         };
         this.editor = React.createRef();
@@ -14,9 +14,11 @@ class TextEditor extends Component {
 
     componentDidMount() {
         document.addEventListener('click', e => this.focus(e))
+        // window.addEventListener('keydown', e => this.handleKeyDown(e))
     }
 
     render() {
+        console.log(this.props)
         return (
             <div className={`editor ${this.state.isFocused ? 'active': ''}`}
              onClick={this.focus.bind(this)}
@@ -41,6 +43,19 @@ class TextEditor extends Component {
             }
         }
     }
+
+    // handleKeyDown(e) {
+    //     const { addCell } = this.props
+    //     const { editorState } = this.state
+    //     if (e.code === 'Enter' && e.ctrlKey && this.state.isFocused) {
+    //         addCell(editorState.getCurrentContent().getPlainText().trimRight())
+    //         this.setState({
+    //             editorState: EditorState.createEmpty()
+    //         })
+    //         this.editorField.blur()
+    //         this.setState({ isFocused: false })
+    //     }
+    // }
 }
 
 export default TextEditor;

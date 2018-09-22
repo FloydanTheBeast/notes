@@ -17,6 +17,11 @@ module.exports = {
     publicPath: '/',
     filename: 'bundle.js'
   },
+  resolve: {
+    alias: {
+      db: path.resolve(__dirname, 'src/db.js')
+    }
+  },
   module: {
     rules: [
       {

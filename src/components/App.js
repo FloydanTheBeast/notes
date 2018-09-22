@@ -1,6 +1,6 @@
 import '../assets/styles/main.sass';
 import React, { Component } from 'react'
-import TextEditor from './Editor'
+import CellList from '../containers/CellList'
 import MenuBar from './MenuBar'
 
 class App extends React.Component {
@@ -10,7 +10,7 @@ class App extends React.Component {
                 <MenuBar />
                 <div className='content'>
                     <h1 className='app-logo'>Notes</h1>
-                    <TextEditor />
+                    <CellList />
                 </div>
             </div>
         );

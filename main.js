@@ -4,7 +4,18 @@
 const {app, BrowserWindow} = require('electron');
 const path = require('path')
 const url = require('url')
+const isDev = require('electron-is-dev');
 
+if (isDev) {
+    /* 
+        The command below automatically requires devtron and electron-react-devtools:
+            require('devtron').install(); // Electron dev tools
+            require('electron-react-devtools').install(); // Electron-react dev tools
+    */
+    require('electron-debug')(
+        { devToolsMode: 'right' }
+    )
+}
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;

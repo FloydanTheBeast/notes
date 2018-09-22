@@ -1,0 +1,1 @@
+export default text => ({type: 'ADD_CELL', text})
