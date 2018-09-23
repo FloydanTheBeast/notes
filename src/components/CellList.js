@@ -12,10 +12,11 @@ class CellList extends Component {
 
     render() {
         const { cells, actions } = this.props
+        console.log('List:',cells)
         return (
             <ul className='cell-list'>
                 {cells.map(cell => (
-                    <Cell cell={cell} actions={actions} />
+                    <Cell key={cell.id} cell={cell} actions={actions} />
                 ))}
             </ul>
         )

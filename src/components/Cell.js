@@ -3,12 +3,12 @@ import { Editor, EditorState, ContentState } from 'draft-js';
 
 class TextEditor extends Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             editorState: EditorState.createWithContent(ContentState.createFromText(this.props.cell.text || '')),
             isFocused: false
-        };
-        this.editor = React.createRef();
+        }
+        this.editor = React.createRef()
         this.onChange = (editorState) => {
             const { editCell } = this.props.actions
             const { cell } = this.props
@@ -29,7 +29,6 @@ class TextEditor extends Component {
     render() {
         const { deleteCell } = this.props.actions
         const { cell } = this.props
-
         return (
             <div className={`cell ${this.state.isFocused ? 'active': ''}`}
              onClick={this.focus.bind(this)}
@@ -38,6 +37,7 @@ class TextEditor extends Component {
                     editorState={this.state.editorState}
                     onChange={this.onChange}
                     ref={node => this.editorField = node}
+                    stripPastedStyles={true}
                 />
                 <div onClick={() => deleteCell(cell.id)}>Delete</div>
             </div>

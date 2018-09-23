@@ -7,7 +7,6 @@ const mapStateToProps = state => ({
     id: state.id
 })
 
-dfgh
 const mapDispatchToProps = dispatch => ({
     addCell: text => dispatch(actions.addCell(text)),
     deleteCell: id => dispatch(actions.deleteCell(id))
