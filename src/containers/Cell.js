@@ -1,14 +1,16 @@
 import { connect } from 'react-redux'
 import Cell from '../components/Cell'
-import addCell from '../actions/index'
+import * as actions from '../actions/index'
 
 const mapStateToProps = state => ({
     text: state.text,
     id: state.id
 })
 
+dfgh
 const mapDispatchToProps = dispatch => ({
-    addCell: text => dispatch(addCell(text))
+    addCell: text => dispatch(actions.addCell(text)),
+    deleteCell: id => dispatch(actions.deleteCell(id))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Cell)

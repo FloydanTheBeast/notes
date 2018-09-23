@@ -1,13 +1,14 @@
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import CellList from '../components/CellList'
-import addCell from '../actions'
+import * as actions from '../actions/index'
 
 const mapStateToProps = state => ({
     cells: state.cells
 })
 
 const mapDispatchToProps = dispatch => ({
-    addCell: text => dispatch(addCell(text))
+    actions: bindActionCreators(actions, dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CellList)

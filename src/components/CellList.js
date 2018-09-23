@@ -6,15 +6,24 @@ class CellList extends Component {
         super(props)
     }
 
+    componentDidMount() {
+        document.addEventListener('keydown', e => this.handleKeyDown(e))
+    }
+
     render() {
-        const { cells } = this.props
+        const { cells, actions } = this.props
         return (
             <ul className='cell-list'>
                 {cells.map(cell => (
-                    <Cell>{cell.text}</Cell>
+                    <Cell cell={cell} actions={actions} />
                 ))}
             </ul>
         )
+    }
+
+    handleKeyDown(e) {
+        const { addCell } = this.props.actions
+        if (e.code === 'KeyN' && e.ctrlKey) addCell()
     }
 }
 

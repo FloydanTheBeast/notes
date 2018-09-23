@@ -5,11 +5,16 @@ class TextEditor extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            editorState: EditorState.createWithContent(ContentState.createFromText(this.props.children || '')),
+            editorState: EditorState.createWithContent(ContentState.createFromText(this.props.cell.text || '')),
             isFocused: false
         };
         this.editor = React.createRef();
-        this.onChange = (editorState) => this.setState({editorState});
+        this.onChange = (editorState) => {
+            const { editCell } = this.props.actions
+            const { cell } = this.props
+            this.setState({editorState}) 
+            editCell(editorState.getCurrentContent().getPlainText().trimRight(), cell.id)
+        };
     }
 
     componentDidMount() {
@@ -17,10 +22,16 @@ class TextEditor extends Component {
         // window.addEventListener('keydown', e => this.handleKeyDown(e))
     }
 
+    componentWillUnmount() {
+        document.removeEventListener('click', e => this.focus(e))
+    }
+
     render() {
-        console.log(this.props)
+        const { deleteCell } = this.props.actions
+        const { cell } = this.props
+
         return (
-            <div className={`editor ${this.state.isFocused ? 'active': ''}`}
+            <div className={`cell ${this.state.isFocused ? 'active': ''}`}
              onClick={this.focus.bind(this)}
              ref={this.editor}>
                 <Editor
@@ -28,12 +39,13 @@ class TextEditor extends Component {
                     onChange={this.onChange}
                     ref={node => this.editorField = node}
                 />
+                <div onClick={() => deleteCell(cell.id)}>Delete</div>
             </div>
         );
     }
 
     focus(e) {
-        if (this.editor) {
+        if (this.editor.current) {
             if (this.editor.current.contains(e.target))  {
                 this.setState({ isFocused: true })
                 this.editorField.focus()
