@@ -7,7 +7,7 @@ class App extends React.Component {
     render() {
         return (
             <div className='app'>
-                <MenuBar />
+                {/* <MenuBar /> */}
                 <div className='content'>
                     <h1 className='app-logo'>Notes</h1>
                     <CellList />

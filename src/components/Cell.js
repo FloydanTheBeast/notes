@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import { Editor, EditorState, ContentState } from 'draft-js';
+import React, { Component } from 'react'
+import { Editor, EditorState, ContentState } from 'draft-js'
+import CellTypePicker from './CellTypePicker'
 
 class TextEditor extends Component {
     constructor(props) {
@@ -27,19 +28,22 @@ class TextEditor extends Component {
     }
 
     render() {
-        const { deleteCell } = this.props.actions
+        const { deleteCell, editCellType } = this.props.actions
         const { cell } = this.props
+        console.log(cell)
+
         return (
             <div className={`cell ${this.state.isFocused ? 'active': ''}`}
              onClick={this.focus.bind(this)}
              ref={this.editor}>
+                <CellTypePicker cell={cell} editCellType={editCellType}/>
                 <Editor
                     editorState={this.state.editorState}
                     onChange={this.onChange}
                     ref={node => this.editorField = node}
                     stripPastedStyles={true}
                 />
-                <div onClick={() => deleteCell(cell.id)}>Delete</div>
+                <div className='cell-delete-btn' onClick={() => deleteCell(cell.id)}>Delete</div>
             </div>
         );
     }
