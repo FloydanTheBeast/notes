@@ -38,25 +38,48 @@ class TextEditor extends Component {
         return (
             <div className={`cell ${this.state.isFocused ? 'active': ''}`} ref={this.editor}>
                 <CellTypePicker cell={cell} editCellType={editCellType}/>
-                <div className='editor'>  
-                    { !this.state.isFocused ?
-                        <div ref={node => this.compiledText = node} dangerouslySetInnerHTML={{__html: md.render(this.state.editorState.getCurrentContent().getPlainText())}}></div>
-                        :           
-                        <Editor
-                            editorState={this.state.editorState}
-                            onChange={this.onChange}
-                            ref={node => this.editorField = node}
-                            stripPastedStyles={true}
-                        />
-                    }
+                <div className='editor' onClick={this.handleEditorClick.bind(this)}>  
+                    {(() => {
+                        switch (cell.cell_type) {
+                            case 'MARKDOWN':
+                                return (
+                                    !this.state.isFocused ?
+                                        <div dangerouslySetInnerHTML={{__html: md.render(this.state.editorState.getCurrentContent().getPlainText())}}></div>
+                                    :           
+                                    <Editor
+                                        editorState={this.state.editorState}
+                                        onChange={this.onChange}
+                                        ref={node => this.editorField = node}
+                                        stripPastedStyles={true}
+                                    />
+                                )
+                            case 'PLAIN_TEXT' :
+                                return (
+                                    <Editor
+                                        editorState={this.state.editorState}
+                                        onChange={this.onChange}
+                                        ref={node => this.editorField = node}
+                                        stripPastedStyles={true}
+                                    />
+                                )
+                            default:
+                                return (
+                                    <h1>Unrecognised cell type :(</h1>
+                                )
+                        }
+                    })()}
                 </div>
                 <div className='cell-delete-btn' onClick={() => deleteCell(cell.id)}>Delete</div>
             </div>
         );
     }
 
+    handleEditorClick() {
+        if (this.editorField)
+            this.editorField.focus()
+    }
+
     handleFocus(e) {
-        let containsEditor = false, containsCompiledText = false
         if (this.editor)
             if (!this.editor.current.contains(e.target))
                 this.setState({isFocused: false})
@@ -68,10 +91,6 @@ class TextEditor extends Component {
             if (this.editorField)
                 this.editorField.blur()
             this.setState({ isFocused: false })
-            // this.setState({
-            //     isFocused: true
-            // })
-            // this.compileMarkdown()
         }
     }
 }
