@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
-import { Editor, EditorState, ContentState } from 'draft-js'
+import { Editor, EditorState, ContentState, convertFromHTML } from 'draft-js'
 import CellTypePicker from './CellTypePicker'
+
+const md = require('markdown-it')()
 
 class TextEditor extends Component {
     constructor(props) {
         super(props)
         this.state = {
             editorState: EditorState.createWithContent(ContentState.createFromText(this.props.cell.text || '')),
-            isFocused: false
+            uncompiledText: this.props.cell.text,
+            isFocused: false,
         }
         this.editor = React.createRef()
         this.onChange = (editorState) => {
@@ -19,59 +22,58 @@ class TextEditor extends Component {
     }
 
     componentDidMount() {
-        document.addEventListener('click', e => this.focus(e))
-        // window.addEventListener('keydown', e => this.handleKeyDown(e))
+        document.addEventListener('click', e => this.handleFocus(e))
+        window.addEventListener('keydown', e => this.handleKeyDown(e))
     }
 
     componentWillUnmount() {
-        document.removeEventListener('click', e => this.focus(e))
+        document.removeEventListener('click', e => this.handleFocus(e))
+        window.removeEventListener('keydown', e => this.handleKeyDown(e))
     }
 
     render() {
         const { deleteCell, editCellType } = this.props.actions
         const { cell } = this.props
-        console.log(cell)
-
+        
         return (
-            <div className={`cell ${this.state.isFocused ? 'active': ''}`}
-             onClick={this.focus.bind(this)}
-             ref={this.editor}>
+            <div className={`cell ${this.state.isFocused ? 'active': ''}`} ref={this.editor}>
                 <CellTypePicker cell={cell} editCellType={editCellType}/>
-                <Editor
-                    editorState={this.state.editorState}
-                    onChange={this.onChange}
-                    ref={node => this.editorField = node}
-                    stripPastedStyles={true}
-                />
+                <div className='editor'>  
+                    { !this.state.isFocused ?
+                        <div ref={node => this.compiledText = node} dangerouslySetInnerHTML={{__html: md.render(this.state.editorState.getCurrentContent().getPlainText())}}></div>
+                        :           
+                        <Editor
+                            editorState={this.state.editorState}
+                            onChange={this.onChange}
+                            ref={node => this.editorField = node}
+                            stripPastedStyles={true}
+                        />
+                    }
+                </div>
                 <div className='cell-delete-btn' onClick={() => deleteCell(cell.id)}>Delete</div>
             </div>
         );
     }
 
-    focus(e) {
-        if (this.editor.current) {
-            if (this.editor.current.contains(e.target))  {
-                this.setState({ isFocused: true })
-                this.editorField.focus()
-            }
-            else {
-                this.setState({ isFocused: false })
-            }
-        }
+    handleFocus(e) {
+        let containsEditor = false, containsCompiledText = false
+        if (this.editor)
+            if (!this.editor.current.contains(e.target))
+                this.setState({isFocused: false})
+        else this.setState({isFocused: true})
     }
 
-    // handleKeyDown(e) {
-    //     const { addCell } = this.props
-    //     const { editorState } = this.state
-    //     if (e.code === 'Enter' && e.ctrlKey && this.state.isFocused) {
-    //         addCell(editorState.getCurrentContent().getPlainText().trimRight())
-    //         this.setState({
-    //             editorState: EditorState.createEmpty()
-    //         })
-    //         this.editorField.blur()
-    //         this.setState({ isFocused: false })
-    //     }
-    // }
+    handleKeyDown(e) {
+        if (e.code === 'Escape') {
+            if (this.editorField)
+                this.editorField.blur()
+            this.setState({ isFocused: false })
+            // this.setState({
+            //     isFocused: true
+            // })
+            // this.compileMarkdown()
+        }
+    }
 }
 
 export default TextEditor;

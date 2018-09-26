@@ -41,8 +41,10 @@
     "webpack-dev-server": "^2.4.5"
   },
   "dependencies": {
+    "@iktakahiro/markdown-it-katex": "^3.0.4",
     "draft-js": "^0.10.5",
     "lowdb": "^1.0.0",
+    "markdown-it": "^8.4.2",
     "react-redux": "^5.0.7",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
