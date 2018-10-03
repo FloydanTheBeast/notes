@@ -2,26 +2,47 @@ const initialState = { cells: [] }
 import db from 'db'
 
 const cell = (state = initialState, action) => {
+    let newState = state
     switch(action.type) {
-        case 'ADD_CELL':
+        case 'ADD_CELL': {
             const newCell =
             {
                 id: state.cells.reduce((maxId, cell) => Math.max(cell.id, maxId), 0) + 1,
                 text: action.text || '',
                 cell_type: 'PLAIN_TEXT'
             }
-            const newState = { 'cells': [...state.cells].concat(newCell) }
+            newState = { 'cells': [...state.cells].concat(newCell) }
             db.get('cells').push(newCell).write()
             return newState
-        case 'EDIT_CELL':
+        }
+        case 'EDIT_CELL': {
             db.get('cells').find({ id: action.id }).assign({ text: action.text }).write()
             return Object.assign({}, state, { cells: state.cells.map(cell => cell.id === action.id ? Object.assign({}, cell, { text: action.text }) : cell)})
-        case 'EDIT_CELL_TYPE':
-            db.get('cells').find({ id: action.id }).assign({ cell_type: action.cell_type }).write()
-            return Object.assign({}, state, { cells: state.cells.map(cell => cell.id === action.id ? Object.assign({}, cell, {cell_type: action.cell_type}): cell)})
-        case 'DELETE_CELL':
+        }
+        case 'EDIT_CELL_TYPE': {
+            switch(action.cell_type) {
+                case 'TODO_LIST':
+                    db.get('cells').find({ id: action.id }).assign({ cell_type: action.cell_type, todoList: [] }).unset('text').write()
+                    return Object.assign({}, state, { cells: state.cells.map(cell => cell.id === action.id ? Object.assign({}, cell, {todoList: [], text: undefined, cell_type: action.cell_type}): cell)})
+                default:
+                    db.get('cells').find({ id: action.id }).set('text', '').assign({ cell_type: action.cell_type }).unset('todoList').write()
+                    return Object.assign({}, state, { cells: state.cells.map(cell => cell.id === action.id ? Object.assign({}, cell, {cell_type: action.cell_type}): cell)})
+            }
+        }
+        case 'DELETE_CELL': {
             db.get('cells').remove({id: action.id}).write()
             return Object.assign({}, state, { cells: state.cells.filter(cell => cell.id !== action.id)})
+        }
+        case 'ADD_TODO': {
+            const todoList = state.cells.find(cell => cell.id === action.id).todoList
+            let newTodo = {
+                id: todoList.reduce((maxId, todo) => Math.max(maxId, todo.id), 0) + 1,
+                text: ''
+            }
+            newState = Object.assign({}, state, { cells: state.cells.map(cell => cell.id === action.id ? Object.assign({}, cell, { todoList: cell.todoList.concat(newTodo)}) : cell)})
+            db.get('cells').find({ id: action.id }).update('todoList', todoList => todoList.concat(newTodo) ).write()
+            return newState
+        }
         default:
             return state
     }

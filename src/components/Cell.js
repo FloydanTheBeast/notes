@@ -32,7 +32,7 @@ class TextEditor extends Component {
     }
 
     render() {
-        const { deleteCell, editCellType } = this.props.actions
+        const { deleteCell, editCellType, addTodo } = this.props.actions
         const { cell } = this.props
         
         return (
@@ -62,6 +62,17 @@ class TextEditor extends Component {
                                         stripPastedStyles={true}
                                     />
                                 )
+                            case 'TODO_LIST':
+                                return (
+                                    <div>
+                                        <div onClick={() => addTodo(cell.id)}>Add todo</div>
+                                        <ul>
+                                            {cell.todoList.map(todo => (
+                                                <li className='todo-item' key={todo.id}>{todo.text || 'Empty todo'}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )
                             default:
                                 return (
                                     <h1>Unrecognised cell type :(</h1>
@@ -80,7 +91,7 @@ class TextEditor extends Component {
     }
 
     handleFocus(e) {
-        if (this.editor)
+        if (this.editor.current)
             if (!this.editor.current.contains(e.target))
                 this.setState({isFocused: false})
         else this.setState({isFocused: true})
