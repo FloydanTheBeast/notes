@@ -9,7 +9,7 @@ class App extends React.Component {
             <div className='app'>
                 {/* <MenuBar /> */}
                 <div className='content'>
-                    <h1 className='app-logo'>Notes</h1>
+                    <h1 className='app-logo'>📝 Notes</h1>
                     <CellList />
                 </div>
             </div>

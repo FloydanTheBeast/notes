@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Editor, EditorState, ContentState, convertFromHTML } from 'draft-js'
 import CellTypePicker from './CellTypePicker'
+import TodoList from './TodoList'
 
 const md = require('markdown-it')()
 
@@ -32,12 +33,17 @@ class TextEditor extends Component {
     }
 
     render() {
-        const { deleteCell, editCellType, addTodo } = this.props.actions
+        const { deleteCell, 
+                editCellType, 
+                addTodo, 
+                toggleTodo, 
+                editTodo } = this.props.actions
+                
         const { cell } = this.props
         
         return (
             <div className={`cell ${this.state.isFocused ? 'active': ''}`} ref={this.editor}>
-                <CellTypePicker cell={cell} editCellType={editCellType}/>
+                <CellTypePicker resetState={() => { this.setState({ editorState: EditorState.createEmpty() })}} cell={cell} editCellType={editCellType}/>
                 <div className='editor' onClick={this.handleEditorClick.bind(this)}>  
                     {(() => {
                         switch (cell.cell_type) {
@@ -64,14 +70,23 @@ class TextEditor extends Component {
                                 )
                             case 'TODO_LIST':
                                 return (
-                                    <div>
-                                        <div onClick={() => addTodo(cell.id)}>Add todo</div>
-                                        <ul>
-                                            {cell.todoList.map(todo => (
-                                                <li className='todo-item' key={todo.id}>{todo.text || 'Empty todo'}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
+                                    // <div>
+                                    //     <div onClick={() => addTodo(cell.id)}>Add todo</div>
+                                    //     <ul>
+                                    //         {cell.todoList.map(todo => (
+                                    //             <li className={`todo-item ${todo.isCompleted ? 'completed' : ''}`} 
+                                    //              onClick={() => toggleTodo(cell.id, todo.id)} key={todo.id}>
+                                    //                 {todo.text || ''}
+                                    //             </li>
+                                    //         ))}
+                                    //     </ul>
+                                    // </div>
+                                    <TodoList
+                                        cellId={cell.id}
+                                        addTodo={addTodo}
+                                        editTodo={editTodo}
+                                        toggleTodo={toggleTodo}
+                                        todoList={cell.todoList} />
                                 )
                             default:
                                 return (
