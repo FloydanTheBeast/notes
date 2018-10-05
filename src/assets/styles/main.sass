@@ -78,3 +78,56 @@ h1
         &:hover
             background-color: lighten(#eb4d4b, 10%)
             cursor: pointer
+
+.todo-list 
+    list-style: none
+    padding: 0
+    li
+        display: flex
+        padding: 0.5rem
+        transition: all 0.3s
+        border-bottom: 1px solid #888
+        &:nth-child(2n)
+            background-color: #eee
+            &.completed
+                background-color: lighten(#2ecc71, 10%)
+        &:nth-child(2n+1)
+            &.completed
+                background-color: lighten(#2ecc71, 20%)
+    .todo-item
+        width: 100%
+        display: inline-flex
+        margin: auto 0
+    & input[type='checkbox']
+        position: absolute
+        left: -9999px
+        &:checked + .switch
+            background-color: #2ecc71
+            &:after
+                transform: translateX(20px)
+    .switch
+        position: relative
+        display: inline-block
+        min-width: 40px
+        height: 20px
+        border-radius: 20px
+        border: 1px solid #555
+        background-color: #e74c3c
+        margin: auto
+        transition: all 0.3s
+        &:after
+            transition: all 0.3s
+            content: ''
+            position: absolute
+            width: 18px
+            height: 18px
+            border-radius: 20px
+            background-color: #fff
+            top: 1px
+            left: 1px
+    .todo-text
+        margin: 0 1rem
+        padding: auto
+        width: 100%
+        line-height: 20px
+

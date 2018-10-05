@@ -6,36 +6,57 @@ export default class componentName extends Component {
         this.state = {
             isEditing: false
         }
+        this.editor = null
+    }
+
+    componentDidMount() {
+        document.addEventListener('click', e => this.handleOutsideClick(e))
     }
 
     render() {
         const { cellId, todo, toggleTodo, editTodo } = this.props
-        console.log(this.props)
-
         let elem
+
         if (this.state.isEditing) {
             elem = (
                 <input
+                    ref={node => this.editor = node}
                     onChange={(e) => editTodo(cellId, todo.id, e.target.value)}
-                    type='text'>
+                    type='text'
+                    value={todo.text}
+                    onBlur={() => this.setState({ isEditing: false })}>
                 </input>
             )
         } else {
             elem = (
-                <div onClick={() => this.setState({ isEditing: true })} className='todo-item'>
+                <div className='todo-item'>
                     <input 
+                        id={`cell-${cellId}-todo-${todo.id}`}
                         type='checkbox'
                         onChange={() => toggleTodo(cellId, todo.id)}
                         checked={todo.isCompleted} />
-                    <label>{todo.text}</label>
+                    <label
+                        htmlFor={`cell-${cellId}-todo-${todo.id}`}
+                        className='switch' />
+                    <label
+                        placeholder='test'
+                        className='todo-text'
+                        onClick={() => this.setState({ isEditing: true })}>
+                        {todo.text}
+                    </label>
                 </div>
             )
         }
 
         return (
-            <li className='todo-item'>
+            <li className={todo.isCompleted ? 'completed' : ''}>
                 {elem}
             </li>
         )
+    }
+
+    handleOutsideClick(e) {
+        if (this.editor)
+            this.editor.focus()
     }
 }
