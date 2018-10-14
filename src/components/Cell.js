@@ -3,7 +3,9 @@ import { Editor, EditorState, ContentState, convertFromHTML } from 'draft-js'
 import CellTypePicker from './CellTypePicker'
 import TodoList from './TodoList'
 
-const md = require('markdown-it')()
+const md = require('markdown-it')({
+    html: true   
+})
 
 class TextEditor extends Component {
     constructor(props) {
@@ -12,12 +14,13 @@ class TextEditor extends Component {
             editorState: EditorState.createWithContent(ContentState.createFromText(this.props.cell.text || '')),
             uncompiledText: this.props.cell.text,
             isFocused: false,
+            isEditing: false
         }
         this.editor = React.createRef()
         this.onChange = (editorState) => {
             const { editCell } = this.props.actions
             const { cell } = this.props
-            this.setState({editorState}) 
+            this.setState({ editorState }) 
             editCell(editorState.getCurrentContent().getPlainText().trimRight(), cell.id)
         };
     }
@@ -32,12 +35,18 @@ class TextEditor extends Component {
         window.removeEventListener('keydown', e => this.handleKeyDown(e))
     }
 
+    componentDidUpdate() {
+        if (this.props.cell.cell_type === 'MARKDOWN' && this.state.isEditing && this.editorField)
+            this.editorField.focus()
+    }
+
     render() {
         const { deleteCell, 
                 editCellType, 
                 addTodo, 
                 toggleTodo, 
-                editTodo } = this.props.actions
+                editTodo,
+                deleteTodo } = this.props.actions
                 
         const { cell } = this.props
         
@@ -50,9 +59,10 @@ class TextEditor extends Component {
                             case 'MARKDOWN':
                                 return (
                                     !this.state.isFocused ?
-                                        <div dangerouslySetInnerHTML={{__html: md.render(this.state.editorState.getCurrentContent().getPlainText())}}></div>
+                                        <div onClick={this.focusMarkdownEditor.bind(this)} dangerouslySetInnerHTML={{__html: md.render(this.state.editorState.getCurrentContent().getPlainText() || '<br/>')}}></div>
                                     :           
                                     <Editor
+                                        onBlur={this.blurMarkdownEditor.bind(this)}
                                         editorState={this.state.editorState}
                                         onChange={this.onChange}
                                         ref={node => this.editorField = node}
@@ -70,22 +80,12 @@ class TextEditor extends Component {
                                 )
                             case 'TODO_LIST':
                                 return (
-                                    // <div>
-                                    //     <div onClick={() => addTodo(cell.id)}>Add todo</div>
-                                    //     <ul>
-                                    //         {cell.todoList.map(todo => (
-                                    //             <li className={`todo-item ${todo.isCompleted ? 'completed' : ''}`} 
-                                    //              onClick={() => toggleTodo(cell.id, todo.id)} key={todo.id}>
-                                    //                 {todo.text || ''}
-                                    //             </li>
-                                    //         ))}
-                                    //     </ul>
-                                    // </div>
                                     <TodoList
                                         cellId={cell.id}
                                         addTodo={addTodo}
                                         editTodo={editTodo}
                                         toggleTodo={toggleTodo}
+                                        deleteTodo={deleteTodo}
                                         todoList={cell.todoList} />
                                 )
                             default:
@@ -97,19 +97,29 @@ class TextEditor extends Component {
                 </div>
                 <div className='cell-delete-btn' onClick={() => deleteCell(cell.id)}>Delete</div>
             </div>
-        );
+        )
+    }
+
+    blurMarkdownEditor() {
+        this.setState({ isEditing: false })
+    }
+
+    focusMarkdownEditor() {
+        this.setState({ isEditing: true })
     }
 
     handleEditorClick() {
-        if (this.editorField)
+        if (this.editorField) {
             this.editorField.focus()
+        }
     }
 
     handleFocus(e) {
-        if (this.editor.current)
+        if (this.editor.current) {
             if (!this.editor.current.contains(e.target))
-                this.setState({isFocused: false})
-        else this.setState({isFocused: true})
+                this.setState({ isFocused: false })
+            else this.setState({ isFocused: true })
+        }
     }
 
     handleKeyDown(e) {

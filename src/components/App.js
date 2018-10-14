@@ -2,6 +2,7 @@ import '../assets/styles/main.sass';
 import React, { Component } from 'react'
 import CellList from '../containers/CellList'
 import MenuBar from './MenuBar'
+import 'smoothscroll-for-websites'
 
 class App extends React.Component {
     render() {

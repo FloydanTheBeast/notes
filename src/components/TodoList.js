@@ -14,11 +14,12 @@ export default class TodoList extends Component {
                 todoList, 
                 addTodo, 
                 toggleTodo, 
-                editTodo } = this.props
+                editTodo,
+                deleteTodo } = this.props
         
         return (
             <React.Fragment>
-                <div onClick={() => addTodo(cellId)}>Add todo</div>
+                <div className='todo-add-btn' onClick={() => addTodo(cellId)}>Add todo</div>
                 <ul className='todo-list'>
                     {todoList.map((todo, index) =>
                         <TodoItem 
@@ -26,7 +27,8 @@ export default class TodoList extends Component {
                             key={index}
                             todo={todo}
                             editTodo={editTodo}
-                            toggleTodo={toggleTodo} />
+                            toggleTodo={toggleTodo}
+                            deleteTodo={deleteTodo} />
                     )}
                 </ul>
             </React.Fragment>

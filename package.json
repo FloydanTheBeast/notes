@@ -37,6 +37,7 @@
     "react-dom": "^16.0.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.19.0",
+    "svg-inline-loader": "^0.8.0",
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.4.5"
   },
@@ -48,6 +49,8 @@
     "react-redux": "^5.0.7",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "redux": "^4.0.0"
+    "redux": "^4.0.0",
+    "smoothscroll-for-websites": "^1.4.6",
+    "svg-inline-react": "^3.1.0"
   }
 }

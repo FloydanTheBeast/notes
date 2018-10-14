@@ -11,6 +11,7 @@ const store = createStore(cellsReducer, db.getState())
 let root = document.createElement('div')
 root.id = "root"
 document.body.appendChild( root)
+document.title = 'Notes'
 
 render(
     <Provider store={store}>

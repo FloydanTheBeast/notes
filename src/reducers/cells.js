@@ -41,7 +41,7 @@ const cell = (state = initialState, action) => {
         }
 
         case 'DELETE_CELL': {
-            db.get('cells').remove({id: action.id}).write()
+            db.get('cells').remove({ id: action.id }).write()
             return Object.assign({}, state, { cells: state.cells.filter(cell => cell.id !== action.id)})
         }
         
@@ -79,6 +79,16 @@ const cell = (state = initialState, action) => {
                 : cell)})
 
             db.get('cells').find({ id: action.cellId }).get('todoList').find({ id: action.todoId }).update('text', text => action.text).write()
+            return newState
+        }
+
+        case 'DELETE_TODO': {
+            const newState = Object.assign({}, state, {cells: state.cells.map(
+                cell => cell.id === action.cellId ? Object.assign({}, cell, { todoList: cell.todoList.filter(
+                    todo => todo.id !== action.todoId)})
+                : cell)})
+
+            db.get('cells').find({ id: action.cellId }).get('todoList').remove({ id: action.todoId }).write()
             return newState
         }
 
