@@ -1,4 +1,5 @@
-import '../assets/styles/main.sass';
+import '../assets/styles/main.sass'
+import '../assets/styles/prism-base16-ateliersulphurpool.light.css'
 import React, { Component } from 'react'
 import CellList from '../containers/CellList'
 import MenuBar from './MenuBar'

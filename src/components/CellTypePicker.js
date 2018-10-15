@@ -43,6 +43,11 @@ export default class CellTypePicker extends Component{
                     }}>
                     <InlineSVG src={require('../assets/Icons/TodoListIcon.svg')} />
                 </div>
+                <div
+                    className={`cell-type-todolist ${currentType === 'CODE_SNIPPET' ? 'active' : ''}`}
+                    onClick={() => editCellType(cell.id, 'CODE_SNIPPET')}>
+                    <InlineSVG src={require('../assets/Icons/CodeIcon.svg')} />
+                </div>
             </div>
         )
     }

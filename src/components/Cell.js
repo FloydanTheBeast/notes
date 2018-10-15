@@ -2,6 +2,10 @@ import React, { Component } from 'react'
 import { Editor, EditorState, ContentState, convertFromHTML } from 'draft-js'
 import CellTypePicker from './CellTypePicker'
 import TodoList from './TodoList'
+import CodeEditor from 'react-simple-code-editor'
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike'
+import 'prismjs/components/prism-javascript'
 
 const md = require('markdown-it')({
     html: true   
@@ -14,7 +18,8 @@ class TextEditor extends Component {
             editorState: EditorState.createWithContent(ContentState.createFromText(this.props.cell.text || '')),
             uncompiledText: this.props.cell.text,
             isFocused: false,
-            isEditing: false
+            isEditing: false,
+            code: ''
         }
         this.editor = React.createRef()
         this.onChange = (editorState) => {
@@ -56,7 +61,7 @@ class TextEditor extends Component {
                 <div className='editor' onClick={this.handleEditorClick.bind(this)}>  
                     {(() => {
                         switch (cell.cell_type) {
-                            case 'MARKDOWN':
+                            case 'MARKDOWN': {
                                 return (
                                     !this.state.isFocused ?
                                         <div onClick={this.focusMarkdownEditor.bind(this)} dangerouslySetInnerHTML={{__html: md.render(this.state.editorState.getCurrentContent().getPlainText() || '<br/>')}}></div>
@@ -69,7 +74,8 @@ class TextEditor extends Component {
                                         stripPastedStyles={true}
                                     />
                                 )
-                            case 'PLAIN_TEXT' :
+                            }   
+                            case 'PLAIN_TEXT': {
                                 return (
                                     <Editor
                                         editorState={this.state.editorState}
@@ -78,7 +84,8 @@ class TextEditor extends Component {
                                         stripPastedStyles={true}
                                     />
                                 )
-                            case 'TODO_LIST':
+                            }
+                            case 'TODO_LIST': {
                                 return (
                                     <TodoList
                                         cellId={cell.id}
@@ -88,6 +95,21 @@ class TextEditor extends Component {
                                         deleteTodo={deleteTodo}
                                         todoList={cell.todoList} />
                                 )
+                            }
+                            case 'CODE_SNIPPET': {
+                                return (
+                                    <CodeEditor
+                                        value={this.state.code}
+                                        onValueChange={code => this.setState({ code })}
+                                        highlight={code => highlight(code, Prism.languages.javascript, 'javascript')}
+                                        // padding={10}
+                                        style={{
+                                            fontFamily: '"Fira code", "Fira Mono", monospace',
+                                            fontSize: 18,
+                                        }}
+                                    />
+                                )
+                            }
                             default:
                                 return (
                                     <h1>Unrecognised cell type :(</h1>

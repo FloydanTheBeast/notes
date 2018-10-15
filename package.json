@@ -46,9 +46,11 @@
     "draft-js": "^0.10.5",
     "lowdb": "^1.0.0",
     "markdown-it": "^8.4.2",
+    "prismjs": "^1.15.0",
     "react-redux": "^5.0.7",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
+    "react-simple-code-editor": "^0.6.1",
     "redux": "^4.0.0",
     "smoothscroll-for-websites": "^1.4.6",
     "svg-inline-react": "^3.1.0"
