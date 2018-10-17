@@ -44,7 +44,7 @@ h1
 
 .app-logo
     font-family: 'Amatic SC'
-    font-size: 5rem
+    font-size: 7rem
     text-align: center
 
 .cell-list
@@ -54,9 +54,10 @@ h1
     width: 80%
     margin: 0 auto 20px
     border: 1px solid #a4b0be
-    border-radius: 5px
+    border-radius: 100px
     transition: all 0.3s
-    // padding: 20px
+    background-color: #ddd
+    padding: 30px
     &.active
         background-color: #fff
         border: 1px solid #2f3542
@@ -72,7 +73,8 @@ h1
     .cell-type-picker
         display: flex
         flex-direction: row
-        background: #222
+        // background: #222
+        border-bottom: 1px solid #a4b0be
         color: #fff
         margin-bottom: 20px
         transition: all 0.2s
@@ -83,7 +85,9 @@ h1
             margin: 7px 10px
             padding: 3px
             transition: all 0.3s
-            opacity: 0.6
+            opacity: 0.7
+            path
+                transition: all 0.4s
             &:hover
                 // background-color: lighten(#333, 50%)
                 cursor: pointer
@@ -99,27 +103,26 @@ h1
                 margin: auto
             svg
                 width: 40px
-                fill: #fff
+                fill: #000
         .cell-type-markdown
             svg
                 width: 60px
                 & path
-                    fill: #fff
-        .cell-type-todolist
+                    fill: #000
+        .cell-type-todolist,
+        .cell-type-code
             display: flex
             i
                 margin: auto
             svg
                 width: 50px
-                fill: #fff
+                fill: #000
         .cell-type-plaintext:hover,
         .cell-type-markdown:hover,
-        .cell-type-todolist:hover
+        .cell-type-todolist:hover,
+        .cell-type-code:hover
             opacity: 1
-            & svg
-                fill: #fff
-                & path
-                    fill: #fff
+            transform: scale(1.1)
 
     .cell-delete-btn
         display: inline-block
