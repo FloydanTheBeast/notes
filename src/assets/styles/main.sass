@@ -15,7 +15,7 @@
 body
     font-family: 'Open Sans', Helvetica, sans-serif
     margin: 0
-    background-color: #e8e8e8
+    background-color: #f8f8f8
 
 h1
     font-size: 5rem
@@ -51,29 +51,40 @@ h1
     padding: 0
 
 .cell
-    width: 80%
-    margin: 0 auto 20px
-    border: 1px solid #a4b0be
-    border-radius: 100px
-    transition: all 0.3s
-    background-color: #ddd
-    padding: 30px
+    &:first-child
+        border-top: 2px solid #777
+    padding-bottom: 1px
+    width: 90%
+    margin: 0 auto 3rem
+    border-top: 1px solid #555
+    border-bottom: 2px solid #777
+    border-right: 2px solid #777
+    border-left: 2px solid #777
+    border-radius: 12px
+    transition: all 0.2s
+    background-color: #ECEFF1
+    padding: 50px 7.5%
+    box-sizing: border-box
     &.active
+        box-shadow: 10px 10px 2px #444
         background-color: #fff
-        border: 1px solid #2f3542
-        outline: none
-    &:hover
-        border: 1px solid #2f3542
-        outline: none
+        .editor
+            border: 1px solid #aaa
+        & .active
+            background-color: #2f3640
+            border-radius: 30px
+            & svg, & path
+                fill: #fff !important
+    &:not(.active):hover
+        background-color: #CFD8DC
     .editor
         padding: 20px
         margin: 0 25px
         border-radius: 5px
-        border: 1px solid #aaa
+        border: 1px solid rgba(255, 255, 255, 0)
     .cell-type-picker
         display: flex
         flex-direction: row
-        // background: #222
         border-bottom: 1px solid #a4b0be
         color: #fff
         margin-bottom: 20px
@@ -84,31 +95,28 @@ h1
             max-width: 150px
             margin: 7px 10px
             padding: 3px
-            transition: all 0.3s
+            transition: all 0.2s
             opacity: 0.7
             path
                 transition: all 0.4s
             &:hover
-                // background-color: lighten(#333, 50%)
                 cursor: pointer
         .active
             opacity: 1
             svg
-                fill: #74b9ff !important
+                fill: #1e90ff
             path
-                fill: #74b9ff !important
+                fill: #1e90ff
         .cell-type-plaintext
             display: flex
             i
                 margin: auto
             svg
                 width: 40px
-                fill: #000
         .cell-type-markdown
             svg
                 width: 60px
                 & path
-                    fill: #000
         .cell-type-todolist,
         .cell-type-code
             display: flex
@@ -116,7 +124,6 @@ h1
                 margin: auto
             svg
                 width: 50px
-                fill: #000
         .cell-type-plaintext:hover,
         .cell-type-markdown:hover,
         .cell-type-todolist:hover,
@@ -131,23 +138,25 @@ h1
         margin: 20px
         border-radius: 10px
         margin-top: 20px
-        background-color: #eb4d4b
-        color: #fff
+        border: 2px solid #eb4d4b
+        color: #eb4d4b
         transition: all 0.3s
         &:hover
-            background-color: lighten(#eb4d4b, 10%)
+            background-color: #eb4d4b
+            color: #fff
             cursor: pointer
 
 .todo-add-btn
-    color: #fff
-    background-color: #2ecc71
+    border: 2px solid #2ecc71
+    color: #2ecc71
     padding: 10px 15px
     display: inline-block
     border-radius: 10px
     margin-bottom: 20px
     transition: all 0.3s
     &:hover
-        background-color: darken(#2ecc71, 5%)
+        background-color: #2ecc71
+        color: #fff
         cursor: pointer
 
 .todo-list 
@@ -157,6 +166,7 @@ h1
         display: flex
         padding: 0.5rem
         transition: all 0.3s
+        border-radius: 5px
         &:nth-child(2n)
             background-color: #eee
             &.completed
@@ -175,7 +185,8 @@ h1
     .todo-item
         width: 100%
         display: flex
-        margin: auto 0
+        & > *
+            margin: auto 0
     .todo-delete-btn
         background-color: #eb4d4b
         min-width: 30px
@@ -228,8 +239,10 @@ h1
         margin: auto 1rem
         padding: 10px 0
         width: 100%
+        max-width: 100%
         line-height: 20px
-
+        white-space: normal
+        word-break: break-word
 .editor
     textarea:focus
         outline: none

@@ -19,7 +19,7 @@ class TextEditor extends Component {
             uncompiledText: this.props.cell.text,
             isFocused: false,
             isEditing: false,
-            code: ''
+            code: this.props.cell.text || ''
         }
         this.editor = React.createRef()
         this.onChange = (editorState) => {
@@ -40,9 +40,16 @@ class TextEditor extends Component {
         window.removeEventListener('keydown', e => this.handleKeyDown(e))
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         if (this.props.cell.cell_type === 'MARKDOWN' && this.state.isEditing && this.editorField)
             this.editorField.focus()
+
+        if (this.props.cell.cell_type != prevProps.cell.cell_type) {
+                this.setState({ 
+                    code: this.props.cell.text || '',
+                    editorState: EditorState.createWithContent(ContentState.createFromText(this.props.cell.text || ''))
+                })
+            }
     }
 
     render() {
@@ -57,7 +64,19 @@ class TextEditor extends Component {
         
         return (
             <div className={`cell ${this.state.isFocused ? 'active': ''}`} ref={this.editor}>
-                <CellTypePicker resetState={() => { this.setState({ editorState: EditorState.createEmpty() })}} cell={cell} editCellType={editCellType}/>
+                <CellTypePicker
+                    resetState={() => { this.setState({ editorState: EditorState.createEmpty() })}}
+                    cell={cell}
+                    editCellType={editCellType}
+                    getCurrentContent={() => {
+                            switch(cell.cell_type) {
+                                case 'CODE_SNIPPET':
+                                    return this.state.code
+                                default:
+                                    return this.state.editorState.getCurrentContent().getPlainText().trimRight()
+                            }
+                        }
+                    }/>
                 <div className='editor' onClick={this.handleEditorClick.bind(this)}>  
                     {(() => {
                         switch (cell.cell_type) {
@@ -100,7 +119,7 @@ class TextEditor extends Component {
                                 return (
                                     <CodeEditor
                                         value={this.state.code}
-                                        onValueChange={code => this.setState({ code })}
+                                        onValueChange={code => {this.handleCodeChange.bind(this)(code)}}
                                         highlight={code => highlight(code, Prism.languages.javascript, 'javascript')}
                                         // padding={10}
                                         style={{
@@ -120,6 +139,11 @@ class TextEditor extends Component {
                 <div className='cell-delete-btn' onClick={() => deleteCell(cell.id)}>Delete</div>
             </div>
         )
+    }
+
+    handleCodeChange(code) {
+        this.setState({ code })
+        this.props.actions.editCell(code, this.props.cell.id)
     }
 
     blurMarkdownEditor() {

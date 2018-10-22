@@ -23,17 +23,17 @@ export default class CellTypePicker extends Component{
     }
     
     render() {
-        const { cell, editCellType, resetState } = this.props
+        const { cell, editCellType, resetState , getCurrentContent } = this.props
         const { currentType } = this.state
-
+        console.log(getCurrentContent())
         return (
             <div className='cell-type-picker'>
                 <div className={`cell-type-plaintext ${currentType === 'PLAIN_TEXT' ? 'active' : ''}`}
-                    onClick={() => editCellType(cell.id, 'PLAIN_TEXT')}>
+                    onClick={() => editCellType(cell.id, 'PLAIN_TEXT', getCurrentContent())}>
                     <InlineSVG src={require('../assets/Icons/PlainTextIcon.svg')} />
                 </div>
                 <div className={`cell-type-markdown ${currentType === 'MARKDOWN' ? 'active' : ''}`}
-                    onClick={() => editCellType(cell.id, 'MARKDOWN')}>
+                    onClick={() => editCellType(cell.id, 'MARKDOWN', getCurrentContent())}>
                     <InlineSVG src={require('../assets/Icons/MarkdownIcon.svg')} />
                 </div>
                 <div className={`cell-type-todolist ${currentType === 'TODO_LIST' ? 'active' : ''}`}
@@ -45,7 +45,7 @@ export default class CellTypePicker extends Component{
                 </div>
                 <div
                     className={`cell-type-code ${currentType === 'CODE_SNIPPET' ? 'active' : ''}`}
-                    onClick={() => editCellType(cell.id, 'CODE_SNIPPET')}>
+                    onClick={() => editCellType(cell.id, 'CODE_SNIPPET', getCurrentContent())}>
                     <InlineSVG src={require('../assets/Icons/CodeIcon.svg')} />
                 </div>
             </div>

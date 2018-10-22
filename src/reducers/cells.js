@@ -28,13 +28,13 @@ const cell = (state = initialState, action) => {
                 case 'TODO_LIST': {
                     db.get('cells').find({ id: action.id }).assign({ cell_type: action.cell_type, todoList: [] }).unset('text').write()
                     return Object.assign({}, state, { cells: state.cells.map(
-                        cell => cell.id === action.id ? Object.assign({}, cell, {todoList: [], text: undefined, cell_type: action.cell_type})
+                        cell => cell.id === action.id ? Object.assign({}, cell, { todoList: [], text: undefined, cell_type: action.cell_type })
                         : cell)})
                 }
                 default: {
-                    db.get('cells').find({ id: action.id }).set('text', '').assign({ cell_type: action.cell_type }).unset('todoList').write()
+                    db.get('cells').find({ id: action.id }).set('text', action.prev_text || '').assign({ cell_type: action.cell_type }).unset('todoList').write()
                     return Object.assign({}, state, { cells: state.cells.map(
-                        cell => cell.id === action.id ? Object.assign({}, cell, {cell_type: action.cell_type})
+                        cell => cell.id === action.id ? Object.assign({}, cell, { cell_type: action.cell_type, text: action.prev_text })
                         : cell)})
                 }
             }
