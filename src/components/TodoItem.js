@@ -45,7 +45,10 @@ export default class componentName extends Component {
                         className='switch' />
                     <label
                         className='todo-text'
-                        onClick={() => this.setState({ isEditing: true })}>
+                        onClick={() => {
+                            if (!todo.isCompleted)
+                                this.setState({ isEditing: true })
+                        }}>
                         {todo.text}
                     </label>
                     <div

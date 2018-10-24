@@ -12,32 +12,43 @@
     src: url('../../assets/Fonts/open-sans/OpenSans-Bold.ttf')
     font-weight: bold
 
+// Reset basic styles
+
+a
+    color: inherit
+    text-decoration: none
+
 // FFD166, 26547C, F2D0A4, 577590
-    
+
 html
     --background-color: linear-gradient(#E1ECF5 60%, #D3EFFF)
-    --font-color-primary: #000
+    --font-color-primary: #444
     --font-color-secondary: #222
     --primary-color: #fff
     --primary-color-accent: #D0E1EF
     --primary-color-accent-hover: lighten(#ECEFF1, 20%)
     --border-color: #222
+    --icon-color: #000
+    --active-cell-color: #2f3640
 
 // Тема оформления
 html[data-theme='dark']
     --background-color: #2c3e50
     --font-color-primary: #fff
     --font-color-secondary: #fff
-    --primary-color: #2f3640
+    --primary-color: #34495e
     --primary-color-accent: #222f3e
     --primary-color-accent-hover: lighten(#222f3e, 20%)
     --border-color: #fff
+    --icon-color: #fff
+    --active-cell-color: #fff
 
 body
     font-family: 'Open Sans', Helvetica, sans-serif
     margin: 0
-    transition: all 0.3s
+    transition: background 0.2s
     background: var(--background-color)
+    background-attachment: fixed
     color: var(--font-color-primary)
 
 h1
@@ -46,7 +57,7 @@ h1
 .app
     height: 100vh
     display: grid
-    overflow: scroll
+    overflow: hidden auto
     grid-auto-columns: auto 1fr
     grid-template-areas: "menu-bar content"
 
@@ -55,7 +66,7 @@ h1
         position: relative
         height: 4px
         width: 35px
-        background: #000
+        background: var(--icon-color)
         &:before, &:after
             content: ' '
             position: absolute
@@ -79,9 +90,9 @@ h1
         left: 0
         & + .content
             filter: blur(3px)
-    transition: all 0.3s
+    transition: all 0.3s ease-in-out
     z-index: 1
-    background-color: #fff
+    background-color: var(--primary-color-accent)
     grid-area: menu-bar
     padding-top: 4rem
     width: 250px
@@ -94,6 +105,8 @@ h1
     & ul
         position: relative
     & li
+        & a:hover
+            border-bottom: 2px solid var(--font-color-primary)
         list-style: none
         margin-top: 1.5rem
         font-size: 1.5rem
@@ -113,7 +126,7 @@ h1
 .cell
     width: 80%
     margin: 0 auto 2rem
-    border: 1px solid #777
+    border: 1px solid var(--border-color)
     border-radius: 3rem
     transition: all 0.2s
     background-color: var(--primary-color-accent)
@@ -123,9 +136,9 @@ h1
         box-shadow: 15px 15px 2px #222
         background-color: var(--primary-color)
         .editor
-            border: 1px solid #aaa
+            border: 1px solid var(--border-color)
         & .active
-            background-color: #2f3640
+            background-color: var(--active-cell-color)
             border-radius: 30px
             & svg, & path
                 fill: #fff !important
@@ -139,7 +152,7 @@ h1
     .cell-type-picker
         display: flex
         flex-direction: row
-        border-bottom: 1px solid #a4b0be
+        border-bottom: 1px solid var(--border-color)
         color: #fff
         margin-bottom: 20px
         transition: all 0.2s
@@ -153,21 +166,27 @@ h1
             opacity: 0.7
             path
                 transition: all 0.4s
+                fill: var(--icon-color)
             &:hover
                 cursor: pointer
         .active
             opacity: 1
             svg
-                fill: #1e90ff
+                fill: #1e90ff !important
             path
-                fill: #1e90ff
+                fill: #1e90ff !important
         .cell-type-plaintext
             display: flex
+            path
+                fill: var(--icon-color)
             i
                 margin: auto
             svg
+                fill: var(--icon-color)
                 width: 35px
         .cell-type-markdown
+            path
+                fill: var(--icon-color)
             svg
                 width: 50px
                 & path
@@ -177,7 +196,10 @@ h1
             i
                 margin: auto
             svg
+                fill: var(--icon-color)
                 width: 40px
+            path
+                fill: var(--icon-color)
         .cell-type-plaintext:hover,
         .cell-type-markdown:hover,
         .cell-type-todolist:hover,
@@ -200,6 +222,29 @@ h1
             color: #fff
             cursor: pointer
 
+.add-new-cell-btn
+    &:after
+        width: 3rem
+        height: 3rem
+        position: relative
+        content: "+"
+        display: inline-block
+        text-align: center
+        line-height: 3rem
+        font-size: 3rem
+    &:hover
+        cursor: pointer
+        background-color: darken(#2ecc71, 5%)
+    position: fixed
+    right: 1rem
+    bottom: 1rem
+    width: 3rem
+    height: 3rem
+    border-radius: 50%
+    color: #fff
+    background-color: #2ecc71
+    transition: all 0.2s
+
 .todo-add-btn
     border: 2px solid #2ecc71
     color: #2ecc71
@@ -217,22 +262,26 @@ h1
     list-style: none
     padding: 0
     li
+        &:hover
+            background-color: var(--primary-color-accent)
         display: flex
         padding: 0.5rem
         transition: all 0.3s
-        border-radius: 5px
+        // border-radius: 5px
         &:nth-child(2n)
-            background-color: #eee
+            // background-color: #eee
             &.completed
                 background-color: lighten(#2ecc71, 10%)
         &:nth-child(2n+1)
             &.completed
                 background-color: lighten(#2ecc71, 20%)
         .todo-editor
+            background-color: transparent
             border: none
             padding: 11px 0
             font-size: 1rem
             width: 100%
+            color: inherit
             &:focus
                 outline: none
 

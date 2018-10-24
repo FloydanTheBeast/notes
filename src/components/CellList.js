@@ -14,11 +14,14 @@ class CellList extends Component {
         const { cells, actions } = this.props
         
         return (
-            <ul className='cell-list'>
-                {cells.map(cell => (
-                    <Cell key={cell.id} cell={cell} actions={actions} />
-                ))}
-            </ul>
+            <React.Fragment>
+                <ul className='cell-list'>
+                    {cells.map(cell => (
+                        <Cell key={cell.id} cell={cell} actions={actions} />
+                    ))}
+                </ul>
+                <div onClick={() => this.props.actions.addCell()} className='add-new-cell-btn'></div>
+            </React.Fragment>
         )
     }
 
